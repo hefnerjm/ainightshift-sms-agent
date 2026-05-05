@@ -51,11 +51,8 @@ def handle_call():
     caller = request.form.get("From", "Unknown")
     
     # Play a greeting and hang up
-    response = VoiceResponse()
-    response.say(
-        "Thanks for calling AI NightShift SATX. We're unavailable right now, "
-        "but we'll text you in just a moment. Have a great day!",
-        voice="Polly.Joanna"
+   response = VoiceResponse()
+        response.play("https://raw.githubusercontent.com/hefnerjm/ainightshift-sms-agent/main/greeting.mp3")
     )
     response.hangup()
 
