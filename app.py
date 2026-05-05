@@ -52,7 +52,7 @@ def handle_call():
     
     # Play a greeting and hang up
    response = VoiceResponse()
-        response.play("https://raw.githubusercontent.com/hefnerjm/ainightshift-sms-agent/main/greeting.mp3")
+        response.play("https://ainightshiftsatx.com/greeting.mp3")
     )
     response.hangup()
 
