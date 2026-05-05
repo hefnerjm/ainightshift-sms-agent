@@ -1,42 +1,36 @@
 """
-Simple in-memory conversation store.
+Redis-backed conversation store.
 Tracks SMS conversation state per phone number.
-On VPS migration, swap this for SQLite/Postgres.
 """
+import json
+import os
+import redis
 
-import time
+TIMEOUT_SECONDS = 600
 
-# In-memory store: { phone_number: { "stage": str, "history": [], "last_active": float } }
-_store = {}
-
-TIMEOUT_SECONDS = 600  # 10 minutes of inactivity ends conversation
+_redis = redis.from_url(os.environ["REDIS_URL"])
 
 def get(phone):
-    """Get conversation state for a number. Returns None if expired or new."""
-    entry = _store.get(phone)
-    if not entry:
+    data = _redis.get(f"conv:{phone}")
+    if not data:
         return None
-    if time.time() - entry["last_active"] > TIMEOUT_SECONDS:
-        clear(phone)
-        return None
-    return entry
+    return json.loads(data)
 
 def set_stage(phone, stage, history=None):
-    """Create or update conversation state."""
-    existing = _store.get(phone, {})
-    _store[phone] = {
+    existing = get(phone) or {}
+    entry = {
         "stage": stage,
         "history": history or existing.get("history", []),
-        "last_active": time.time()
     }
+    _redis.setex(f"conv:{phone}", TIMEOUT_SECONDS, json.dumps(entry))
 
 def append_message(phone, role, content):
-    """Add a message to conversation history."""
-    if phone not in _store:
+    existing = get(phone)
+    if not existing:
         set_stage(phone, "started")
-    _store[phone]["history"].append({"role": role, "content": content})
-    _store[phone]["last_active"] = time.time()
+        existing = get(phone)
+    existing["history"].append({"role": role, "content": content})
+    _redis.setex(f"conv:{phone}", TIMEOUT_SECONDS, json.dumps(existing))
 
 def clear(phone):
-    """End a conversation."""
-    _store.pop(phone, None)
+    _redis.delete(f"conv:{phone}")
