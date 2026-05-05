@@ -51,9 +51,8 @@ def handle_call():
     caller = request.form.get("From", "Unknown")
     
     # Play a greeting and hang up
-   response = VoiceResponse()
-        response.play("https://ainightshift-assets-9233.twil.io/greeting.mp3")
-    )
+    response = VoiceResponse()
+    response.play("https://ainightshift-assets-9233.twil.io/greeting.mp3")
     response.hangup()
 
     # Fire outbound SMS to the caller
