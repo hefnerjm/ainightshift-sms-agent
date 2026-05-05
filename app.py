@@ -10,7 +10,7 @@ from twilio.twiml.voice_response import VoiceResponse
 from twilio.twiml.messaging_response import MessagingResponse
 import anthropic
 import conversation_store
-
+import time
 app = Flask(__name__)
 
 # Clients
@@ -62,6 +62,7 @@ def handle_call():
             f"Most businesses we work with are losing leads and hours to manual work without even realizing it. "
             f"If you're looking for AI automation services, you've come to the right place — how can we help?"
         )
+        time.sleep(10)
         twilio_client.messages.create(
             body=opening_message,
             from_=TWILIO_FROM,
