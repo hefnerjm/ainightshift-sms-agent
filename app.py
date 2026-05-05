@@ -58,9 +58,9 @@ def handle_call():
     # Fire outbound SMS to the caller
     try:
         opening_message = (
-            f"Hi! This is {BUSINESS_NAME}. Sorry we missed your call! "
-            f"I'm an AI assistant — can I help you or connect you with our team? "
-            f"What's your name and what brings you our way?"
+            f"Hi, this is John with A.I. Night Shift SATX — sorry we missed your call! "
+            f"Most businesses we work with are losing leads and hours to manual work without even realizing it. "
+            f"If you're looking for AI automation services, you've come to the right place — how can we help?"
         )
         twilio_client.messages.create(
             body=opening_message,
