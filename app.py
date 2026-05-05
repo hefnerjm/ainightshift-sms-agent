@@ -52,7 +52,7 @@ def handle_call():
     
     # Play a greeting and hang up
    response = VoiceResponse()
-        response.play("https://ainightshiftsatx.com/greeting.mp3")
+        response.play("https://ainightshift-assets-9233.twil.io/greeting.mp3")
     )
     response.hangup()
 
